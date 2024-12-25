@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Scrollable Images</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="scroll-container" id="scrollContainer">
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    <div class="image"><img src="sdd150.jpg" height="150" alt=""></div>
+    
+    
+</div>
+
+<script>
+    const container = document.getElementById('scrollContainer');
+    const images = document.querySelectorAll('.image');
+
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+
+    // Drag functionality
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        container.classList.add('active');
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+    });
+
+    container.addEventListener('mouseleave', () => {
+        isDragging = false;
+        container.classList.remove('active');
+    });
+
+    container.addEventListener('mouseup', () => {
+        isDragging = false;
+        container.classList.remove('active');
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2; // Scroll speed
+        container.scrollLeft = scrollLeft - walk;
+    });
+
+    // Center the scroll container at the beginning
+    const centerScroll = () => {
+        const middleIndex = Math.floor(images.length / 2);
+        const middleImage = images[middleIndex];
+        container.scrollLeft = middleImage.offsetLeft - container.offsetWidth / 2 + middleImage.offsetWidth / 2;
+    };
+
+    // Add or remove the inactive class based on scroll position
+    const updateImageScale = () => {
+        const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+
+        images.forEach((image) => {
+            const imageCenter = image.offsetLeft + image.offsetWidth / 2;
+            const distance = Math.abs(containerCenter - imageCenter);
+
+            if (distance < image.offsetWidth / 2) {
+                image.classList.remove('inactive');
+            } else {
+                image.classList.add('inactive');
+            }
+        });
+    };
+
+    container.addEventListener('scroll', updateImageScale);
+
+    // Initialize
+    window.addEventListener('load', () => {
+        centerScroll();
+        updateImageScale();
+    });
+</script>
+
+</body>
+</html>
